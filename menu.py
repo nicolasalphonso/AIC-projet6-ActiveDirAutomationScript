@@ -1,6 +1,6 @@
 import tkinter as tk
 from PIL import Image, ImageTk
-import adduser
+import showUsersAndGroups
 
 
 def buttontest():
@@ -10,7 +10,7 @@ def buttontest():
 This function display the frame of the main menu
 '''
 
-def display():
+def display(connection):
 
     root = tk.Tk()
     root.title("Nicolas Alphonso : active directory automation script")
@@ -35,7 +35,7 @@ def display():
 
     # add user button
     add_user_text = tk.StringVar()
-    add_user_button = tk.Button(root, textvariable=add_user_text, font="Raleway", command=lambda: adduser.display(),
+    add_user_button = tk.Button(root, textvariable=add_user_text, font="Raleway", command=lambda: showUsersAndGroups.display(connection),
                                 bg="#20bebe", fg="white", height=2, width=10)
     add_user_text.set("Add a user")
     add_user_button.grid(column=1, row=2, columnspan=1)
