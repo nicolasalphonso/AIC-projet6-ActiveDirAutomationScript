@@ -12,21 +12,21 @@ def display(connection):
 '''
 
 def display(connection):
-    # Provide a search base to search for.
+    # Search base to search for.
     search_base = 'dc=asertech,dc=fr'
-    # provide a uidNumber to search for. '*" to fetch all users/groups
+    # search filter
     search_filter = '(objectClass=user)'
 
 
     try:
-        # only the attributes specified will be returned
+        # specified attributes will be returned
         connection.search(search_base=search_base,
                          search_filter=search_filter,
                          search_scope=SUBTREE,
                          attributes=['cn', 'sn', 'uid', 'uidNumber'])
-        # search will not return any values.
-        # the entries method in connection object returns the results
+        # results will take the results of search
         results = connection.response
+
     except LDAPException as e:
         results = e
 
