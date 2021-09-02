@@ -1,6 +1,6 @@
 import tkinter as tk
 from PIL import Image, ImageTk
-import showUsersAndGroups
+import addGroup
 
 
 def buttontest():
@@ -33,11 +33,11 @@ def display(connection):
     instructions = tk.Label(root, text="Select a task below", font=("Raleway", 22))
     instructions.grid(column=1, row=1, columnspan=5)
 
-    # add user button
+    # add a group button
     add_user_text = tk.StringVar()
-    add_user_button = tk.Button(root, textvariable=add_user_text, font="Raleway", command=lambda: showUsersAndGroups.display(connection),
+    add_user_button = tk.Button(root, textvariable=add_user_text, font="Raleway", command=lambda: addGroup.display(connection),
                                 bg="#20bebe", fg="white", height=2, width=10)
-    add_user_text.set("Add a user")
+    add_user_text.set("Add a group")
     add_user_button.grid(column=1, row=2, columnspan=1)
 
     # function2 button
