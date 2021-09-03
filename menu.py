@@ -1,6 +1,8 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 import addGroup
+import unlockAccounts
+import activateUsersFromCsvFile
 
 
 def buttontest():
@@ -35,6 +37,7 @@ def display(connection):
 
     # add a group button
     add_user_text = tk.StringVar()
+
     add_user_button = tk.Button(root, textvariable=add_user_text, font="Raleway", command=lambda: addGroup.display(connection),
                                 bg="#20bebe", fg="white", height=2, width=10)
     add_user_text.set("Add a group")
@@ -47,16 +50,16 @@ def display(connection):
     function2_text.set("function 2")
     function2_button.grid(column=2, row=2, columnspan=1)
 
-    # function3 button
+    # Unlock accounts button
     function3_text = tk.StringVar()
-    function3_button = tk.Button(root, textvariable=function3_text, font="Raleway", command=lambda: buttontest(),
-                                 bg="#20bebe", fg="white", height=2, width=10)
-    function3_text.set("function 3")
+    function3_button = tk.Button(root, textvariable=function3_text, font="Raleway", command=lambda: unlockAccounts.unlockAccounts(connection),
+                                 bg="#20bebe", fg="white", height=2, width=15)
+    function3_text.set("unlock accounts")
     function3_button.grid(column=3, row=2, columnspan=1)
 
     # function4 button
     function4_text = tk.StringVar()
-    function4_button = tk.Button(root, textvariable=function4_text, font="Raleway", command=lambda: buttontest(),
+    function4_button = tk.Button(root, textvariable=function4_text, font="Raleway", command=lambda: activateUsersFromCsvFile.UploadAction(),
                                  bg="#20bebe", fg="white", height=2, width=10)
     function4_text.set("function 4")
     function4_button.grid(column=4, row=2, columnspan=1)

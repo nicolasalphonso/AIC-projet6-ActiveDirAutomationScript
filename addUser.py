@@ -8,7 +8,7 @@ def display(connection):
     root.geometry("900x500")
     root.title("Add a group")
 
-    def addAGroup():
+    def addUser():
         # delete content of displayLabel
         resultDisplay.config(text="")
 
@@ -42,7 +42,7 @@ def display(connection):
       
 
     # main title
-    title = tk.Label(root, text="Add a group", font=("Raleway", 30))
+    title = tk.Label(root, text="Add a user", font=("Raleway", 30))
     title.pack()
 
     # instructions
@@ -64,7 +64,7 @@ def display(connection):
     inputDescription.pack(pady=20)
 
     # "add a group" button
-    add_group_button = tk.Button(root, text="Add group", font="Raleway",
+    add_group_button = tk.Button(root, text="Add user", font="Raleway",
                                  command=addAGroup,
                                  bg="#20bebe", fg="white", height=2, width=10)
 
