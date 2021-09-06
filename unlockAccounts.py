@@ -1,16 +1,18 @@
-from ldap3 import Connection, ALL, SUBTREE
+from ldap3 import SUBTREE
 from ldap3.core.exceptions import LDAPException
+import os
 
-def unlockAccounts(connect_ldap):
+
+def unlock_accounts(connect_ldap):
     search_filter = "(&(objectClass=user)(lockoutTime>=1))"
 
-    search_base = 'dc=asertech,dc=fr'
+    search_base = os.environ.get("SEARCHDC")
 
     try:
         connect_ldap.search(search_base=search_base,
-                          search_filter=search_filter,
-                          search_scope=SUBTREE,
-                          attributes=['cn', 'sn','uid','uidnumber'])
+                            search_filter=search_filter,
+                            search_scope=SUBTREE,
+                            attributes=['cn', 'sn', 'uid', 'uidnumber'])
 
         results = connect_ldap.response
 

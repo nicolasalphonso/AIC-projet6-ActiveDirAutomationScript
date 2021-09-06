@@ -1,25 +1,27 @@
 import tkinter as tk
+import os
+from ldap3.core.exceptions import LDAPException
 from dotenv import load_dotenv  # use of python-dotenv to hide credentials and use environment variables
 load_dotenv()
-from ldap3.core.exceptions import LDAPException, LDAPBindError
+
 
 def display(connection):
     root = tk.Tk()
     root.geometry("900x500")
     root.title("Add a group")
 
-    def addAGroup():
+    def add_a_group():
         # delete content of displayLabel
-        resultDisplay.config(text="")
+        result_display.config(text="")
 
         # retrieve data from form
-        cn = inputCn.get()
-        description = inputDescription.get()
+        cn = input_cn.get()
+        description = input_description.get()
 
-        if ((cn != "") and (description !="")):
+        if (cn != "") and (description != ""):
 
             dl_shortname = cn
-            dl_group_dn = 'CN=' + dl_shortname + ',DC=asertech,DC=fr'
+            dl_group_dn = 'CN=' + dl_shortname + os.environ.get("SEARCHDC")
             object_class = 'group'
             attr = {
                 'cn': dl_shortname,
@@ -37,9 +39,8 @@ def display(connection):
         else:
             connection.result['description'] = "All fields required"
 
-        resultDisplay.config(text=connection.result['description'])
+        result_display.config(text=connection.result['description'])
         print(connection.result['description'])
-      
 
     # main title
     title = tk.Label(root, text="Add a group", font=("Raleway", 30))
@@ -51,29 +52,26 @@ def display(connection):
 
     # form
     # form cn part
-    cnLabel = tk.Label(root, text="cn :")
-    cnLabel.pack()
-    inputCn = tk.Entry(root, width=40)
-    inputCn.pack(pady=20)
-
+    cn_label = tk.Label(root, text="cn :")
+    cn_label.pack()
+    input_cn = tk.Entry(root, width=40)
+    input_cn.pack(pady=20)
 
     # form description part
-    inputDescriptionLabel = tk.Label(root, text="description :")
-    inputDescriptionLabel.pack()
-    inputDescription = tk.Entry(root, width=40)
-    inputDescription.pack(pady=20)
+    input_description_label = tk.Label(root, text="description :")
+    input_description_label.pack()
+    input_description = tk.Entry(root, width=40)
+    input_description.pack(pady=20)
 
     # "add a group" button
     add_group_button = tk.Button(root, text="Add group", font="Raleway",
-                                 command=addAGroup,
+                                 command=add_a_group,
                                  bg="#20bebe", fg="white", height=2, width=10)
 
     add_group_button.pack()
 
-
     # result display
-    resultDisplay = tk.Label(root, text="", font=("Raleway", 22))
-    resultDisplay.pack()
+    result_display = tk.Label(root, text="", font=("Raleway", 22))
+    result_display.pack()
 
     root.mainloop()
-

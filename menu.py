@@ -8,9 +8,11 @@ import activateUsersFromCsvFile
 def buttontest():
     print("button works")
 
+
 '''
 This function display the frame of the main menu
 '''
+
 
 def display(connection):
 
@@ -38,7 +40,8 @@ def display(connection):
     # add a group button
     add_user_text = tk.StringVar()
 
-    add_user_button = tk.Button(root, textvariable=add_user_text, font="Raleway", command=lambda: addGroup.display(connection),
+    add_user_button = tk.Button(root, textvariable=add_user_text, font="Raleway",
+                                command=lambda: addGroup.display(connection),
                                 bg="#20bebe", fg="white", height=2, width=10)
     add_user_text.set("Add a group")
     add_user_button.grid(column=1, row=2, columnspan=1)
@@ -52,16 +55,18 @@ def display(connection):
 
     # Unlock accounts button
     function3_text = tk.StringVar()
-    function3_button = tk.Button(root, textvariable=function3_text, font="Raleway", command=lambda: unlockAccounts.unlockAccounts(connection),
+    function3_button = tk.Button(root, textvariable=function3_text, font="Raleway",
+                                 command=lambda: unlockAccounts.unlock_accounts(connection),
                                  bg="#20bebe", fg="white", height=2, width=15)
     function3_text.set("unlock accounts")
     function3_button.grid(column=3, row=2, columnspan=1)
 
     # function4 button
     function4_text = tk.StringVar()
-    function4_button = tk.Button(root, textvariable=function4_text, font="Raleway", command=lambda: activateUsersFromCsvFile.UploadAction(),
+    function4_button = tk.Button(root, textvariable=function4_text, font="Raleway",
+                                 command=lambda: activateUsersFromCsvFile.upload_action(connection),
                                  bg="#20bebe", fg="white", height=2, width=10)
-    function4_text.set("function 4")
+    function4_text.set("Add users from CSV")
     function4_button.grid(column=4, row=2, columnspan=1)
 
     # function5 button
