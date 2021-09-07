@@ -1,24 +1,24 @@
-from datetime import datetime
-from tkinter import filedialog
-from ldap3.core.exceptions import LDAPException
-import csv
 import os
+import time
+
+from ldap3.core.exceptions import LDAPException
+
+import csvFileManagement
+import logsManagement
 
 
 def upload_action(connection):
-    initial_log = "Logs: Delete Users form CSV"+str(datetime.now())
+    # determine a good time based complement for the log filename
+    initial_time = time.strftime("%Y%m%d-%H%M%S")
+
+    # define the first line of the log file
+    initial_log = "Logs: Delete Users form CSV" + initial_time
     logs = initial_log
 
-    filename = filedialog.askopenfilename()
+    # open csv file
+    data_lines = csvFileManagement.open_csv_file()
 
-    data = open(filename, encoding="utf-8")
-
-    print('Selected:', filename)
-
-    csv_data = csv.reader(data)
-
-    data_lines = list(csv_data)
-
+    # for each line, retrieve necessary elements
     for line in data_lines[1:]:
         sam_account_name = line[0]
         ou = line[1]
@@ -27,10 +27,10 @@ def upload_action(connection):
         # Delete users
         try:
             connection.delete(user_dn)
+            logs += "\n User deleted : " + user_dn
 
         except LDAPException as e:
             logs += "\n Error : " + str(e)
 
-    if logs == initial_log:
-        logs += "\n Nothing to declare ! :)"
-    print(logs)
+    # print and write logs
+    logsManagement.write_logs(logs, initial_log, initial_time, "delete_users")

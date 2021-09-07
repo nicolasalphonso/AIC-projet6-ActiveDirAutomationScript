@@ -1,25 +1,29 @@
-from tkinter import filedialog
-from datetime import datetime
-from ldap3.core.exceptions import LDAPException
-from ldap3 import MODIFY_REPLACE
-import csv
 import os
+import time
+
+from ldap3 import MODIFY_REPLACE
+from ldap3.core.exceptions import LDAPException
+
+import csvFileManagement
+import logsManagement
+
+'''
+this function creates Active Directory users according to a CSV file chosen by the user
+'''
 
 
 def upload_action(connection):
-    initial_log = "Logs: Create Users form CSV"+str(datetime.now())
+    # determine a good time based complement for the log filename
+    initial_time = time.strftime("%Y%m%d-%H%M%S")
+
+    # define the first line of the log file
+    initial_log = "Logs: Create Users form CSV" + initial_time
     logs = initial_log
 
-    filename = filedialog.askopenfilename()
+    # open csv file
+    data_lines = csvFileManagement.open_csv_file()
 
-    data = open(filename, encoding="utf-8")
-
-    print('Selected:', filename)
-
-    csv_data = csv.reader(data)
-
-    data_lines = list(csv_data)
-
+    # for each line, retrieve necessary elements
     for line in data_lines[1:]:
         firstname = line[0]
         lastname = line[1]
@@ -58,24 +62,30 @@ def upload_action(connection):
                                            'givenName': firstname,
                                            'sn': lastname,
                                            'displayName': display_name,
-                                           # 'userAccountControl': ['544'],
                                            })
 
-                # set password to temporary password
+                # N.B.: works only with ssl connection
                 try:
-                    # works only with tls connection
-                    # connection.modify(user_dn, {'userPassword':[(MODIFY_REPLACE, temp_password)]})
+                    # set password to temporary password
                     connection.extend.microsoft.modify_password(user_dn, new_password=temp_password, old_password=None)
-                    connection.modify(user_dn, {'userAccountControl': [(MODIFY_REPLACE, 544)]})
-                    print("Active Directory password was set successfully!")
+
+                    # force user to change password on next connection
+                    connection.modify(user_dn, {'pwdLastSet': [(MODIFY_REPLACE, [0])]})
+
+                    # userAccountControl : 512 - normal account
+                    connection.modify(user_dn, {'userAccountControl': [(MODIFY_REPLACE, '512')]})
+
+                    # add result to logs
+                    logs += "\n User added : " + user_dn
+
                 except LDAPException as e:
                     logs += "\n Error : " + str(e)
 
             except LDAPException as e:
                 logs += "\n Error : " + str(e)
+
         except LDAPException as e:
             logs += "\n Error : " + str(e)
 
-    if logs == initial_log:
-        logs += "\n Nothing to declare ! :)"
-    print(logs)
+    # print and write logs
+    logsManagement.write_logs(logs, initial_log, initial_time, "add_users")

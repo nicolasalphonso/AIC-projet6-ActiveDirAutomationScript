@@ -1,7 +1,10 @@
-from ldap3 import SUBTREE, MODIFY_REPLACE
-from ldap3.core.exceptions import LDAPException
 import os
 import time
+
+from ldap3 import SUBTREE, MODIFY_REPLACE
+from ldap3.core.exceptions import LDAPException
+
+import logsManagement
 
 
 def unlock_accounts(connection):
@@ -32,11 +35,12 @@ def unlock_accounts(connection):
         try:
             user_dn = element["dn"]
             print("locked user : " + user_dn)
+            logs += "\n Locked user : " + user_dn
 
             # unlock user setting lockoutTime to 0
             try:
                 connection.modify(user_dn, {'lockoutTime': [(MODIFY_REPLACE, ['0'])]})
-                print("ok")
+                logs += "\n unlocked"
 
             except LDAPException as e:
                 logs += "\n Error : " + str(e)
@@ -44,17 +48,5 @@ def unlock_accounts(connection):
         except Exception:
             pass
 
-    # if no log was written, just add "Nothing to declare" in the log file
-    if logs == initial_log:
-        logs += "\n Nothing to declare ! :)"
-    print(logs)
-
-    # create the logs directory if it doesn't exist
-    if not os.path.exists("logs"):
-        os.mkdir("logs")
-
-    # create the log file in logs folder
-    log_file_name = "logs/unlock_accounts_" + initial_time + ".txt"
-    file = open(log_file_name, "a")
-    file.write(logs)
-    file.close()
+    # print and write logs
+    logsManagement.write_logs(logs, initial_log, initial_time, "unlock_accounts")

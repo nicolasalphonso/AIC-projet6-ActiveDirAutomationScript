@@ -1,19 +1,12 @@
 import tkinter as tk
+
 from PIL import Image, ImageTk
+
+import activateUsersFromCsvFile
 import addGroup
-import unlockAccounts
 import createUsersFromCsvFile
 import deleteUsersFromCsvFile
-import activateUsersFromCsvFile
-
-'''
-This function is for button test only
-'''
-
-
-def buttontest():
-    print("button works")
-
+import unlockAccounts
 
 '''
 This function display the frame of the main menu
@@ -21,7 +14,6 @@ This function display the frame of the main menu
 
 
 def display(connection):
-
     root = tk.Tk()
     root.title("Nicolas Alphonso : active directory automation script")
 
@@ -47,8 +39,8 @@ def display(connection):
     add_group_text = tk.StringVar()
 
     add_group_button = tk.Button(root, textvariable=add_group_text, font="Raleway",
-                                command=lambda: addGroup.display(connection),
-                                bg="#20bebe", fg="white", height=2, width=10)
+                                 command=lambda: addGroup.display(connection),
+                                 bg="#20bebe", fg="white", height=2, width=10)
     add_group_text.set("Add a group")
     add_group_button.grid(column=0, row=2, columnspan=1)
 
@@ -63,24 +55,24 @@ def display(connection):
     # Create users from CSV button
     create_users_text = tk.StringVar()
     create_users_button = tk.Button(root, textvariable=create_users_text, font="Raleway",
-                                 command=lambda: createUsersFromCsvFile.upload_action(connection),
-                                 bg="#20bebe", fg="white", height=2, width=18)
+                                    command=lambda: createUsersFromCsvFile.upload_action(connection),
+                                    bg="#20bebe", fg="white", height=2, width=18)
     create_users_text.set("Add users from CSV")
     create_users_button.grid(column=2, row=2, columnspan=1)
 
     # Delete users from CSV button
     delete_users_text = tk.StringVar()
     delete_users_button = tk.Button(root, textvariable=delete_users_text, font="Raleway",
-                                 command=lambda: deleteUsersFromCsvFile.upload_action(connection),
-                                 bg="#20bebe", fg="white", height=2, width=18)
+                                    command=lambda: deleteUsersFromCsvFile.upload_action(connection),
+                                    bg="#20bebe", fg="white", height=2, width=18)
     delete_users_text.set("Delete users from CSV")
     delete_users_button.grid(column=3, row=2, columnspan=1)
 
     # Activate users from CSV button
     activate_users_text = tk.StringVar()
     activate_users_button = tk.Button(root, textvariable=activate_users_text, font="Raleway",
-                                 command=lambda: activateUsersFromCsvFile.upload_action(connection),
-                                 bg="#20bebe", fg="white", height=2, width=20)
+                                      command=lambda: activateUsersFromCsvFile.upload_action(connection),
+                                      bg="#20bebe", fg="white", height=2, width=20)
     activate_users_text.set("Activate users from CSV")
     activate_users_button.grid(column=4, row=2, columnspan=1)
 
