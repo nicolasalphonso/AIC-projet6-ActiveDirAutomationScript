@@ -1,13 +1,12 @@
 from datetime import datetime
 from tkinter import filedialog
 from ldap3.core.exceptions import LDAPException
-from ldap3 import MODIFY_REPLACE
 import csv
 import os
 
 
 def upload_action(connection):
-    initial_log = "Logs: Activate Users form CSV"+str(datetime.now())
+    initial_log = "Logs: Delete Users form CSV"+str(datetime.now())
     logs = initial_log
 
     filename = filedialog.askopenfilename()
@@ -27,7 +26,7 @@ def upload_action(connection):
 
         # Delete users
         try:
-            connection.modify(user_dn, {'userAccountControl': [(MODIFY_REPLACE, ['66080'])]})
+            connection.delete(user_dn)
 
         except LDAPException as e:
             logs += "\n Error : " + str(e)

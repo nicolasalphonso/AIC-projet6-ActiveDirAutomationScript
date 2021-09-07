@@ -1,27 +1,41 @@
-from ldap3 import SUBTREE
+from ldap3 import SUBTREE, MODIFY_REPLACE
 from ldap3.core.exceptions import LDAPException
 import os
+from datetime import datetime
 
 
-def unlock_accounts(connect_ldap):
+def unlock_accounts(connection):
+    initial_log = "Logs: Unlock accounts" + str(datetime.now())
+    logs = initial_log
+
     search_filter = "(&(objectClass=user)(lockoutTime>=1))"
 
-    search_base = os.environ.get("SEARCHDC")
+    search_base = os.environ.get("SEARCHBASE")
 
     try:
-        connect_ldap.search(search_base=search_base,
-                            search_filter=search_filter,
-                            search_scope=SUBTREE,
-                            attributes=['cn', 'sn', 'uid', 'uidnumber'])
-
-        results = connect_ldap.response
+        connection.search(search_base=search_base,
+                          search_filter=search_filter,
+                          search_scope=SUBTREE,
+                          attributes=['cn'])
 
     except LDAPException as e:
+        logs += "\n Error : " + str(e)
 
-        results = e
-    print("response")
-    print(connect_ldap.response)
-    print("entries")
-    print(connect_ldap.entries)
+    for element in connection.response:
+        try:
+            user_dn = element["dn"]
+            print(user_dn)
 
-    return results
+            # unlock user
+            try:
+                connection.modify(user_dn, {'lockoutTime': [(MODIFY_REPLACE, ['0'])]})
+                print("ok")
+            except LDAPException as e:
+                logs += "\n Error : " + str(e)
+        except:
+            pass
+
+    if logs == initial_log:
+        logs += "\n Nothing to declare ! :)"
+
+    print(logs)
