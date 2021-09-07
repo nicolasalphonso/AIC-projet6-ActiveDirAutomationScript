@@ -12,7 +12,7 @@ def upload_action(connection):
     # determine a good time based complement for the log filename
     initial_time = time.strftime("%Y%m%d-%H%M%S")
 
-    # define the first line of the log file
+    # define the first line of the logs file
     initial_log = "Logs: Activate Users form CSV" + time.strftime("%Y%m%d-%H%M%S")
     logs = initial_log
 

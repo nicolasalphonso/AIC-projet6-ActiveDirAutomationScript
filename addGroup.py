@@ -29,7 +29,7 @@ def display(connection):
         # determine a good time based complement for the log filename
         initial_time = time.strftime("%Y%m%d-%H%M%S")
 
-        # define the first line of the log file
+        # define the first line of the logs file
         initial_log = "Logs: Add a group " + initial_time
         logs = initial_log
 
