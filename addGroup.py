@@ -1,8 +1,12 @@
 import os
+import time
 import tkinter as tk
 
-from dotenv import load_dotenv  # use of python-dotenv to hide credentials and use environment variables
+# use of python-dotenv to hide credentials and use environment variables
+from dotenv import load_dotenv
 from ldap3.core.exceptions import LDAPException
+
+import logsManagement
 
 load_dotenv()
 
@@ -22,6 +26,13 @@ def display(connection):
     '''
 
     def add_a_group():
+        # determine a good time based complement for the log filename
+        initial_time = time.strftime("%Y%m%d-%H%M%S")
+
+        # define the first line of the log file
+        initial_log = "Logs: Add a group " + initial_time
+        logs = initial_log
+
         # delete content of displayLabel
         result_display.config(text="")
 
@@ -33,14 +44,13 @@ def display(connection):
         if (cn != "") and (description != ""):
 
             # generate the dn and the attribute of the new group
-            dl_shortname = cn
-            dl_group_dn = 'CN=' + dl_shortname + os.environ.get("SEARCHDC")
+            dl_group_dn = 'CN=' + cn + os.environ.get("SEARCHDC")
             object_class = 'group'
             attr = {
-                'cn': dl_shortname,
+                'cn': cn,
                 'description': description,
                 'groupType': '-2147483644',
-                'sAMAccountName': dl_shortname
+                'sAMAccountName': cn
             }
 
             # add the group
@@ -55,8 +65,16 @@ def display(connection):
             connection.result['description'] = "All fields required"
 
         # display the description of the result of the operation
-        result_display.config(text=connection.result['description'])
-        print(connection.result['description'])
+        info_to_display = "\nGroup \"" + cn + "\" creation : " + connection.result['description']
+        result_display.config(text=info_to_display)
+        logs += info_to_display
+
+        # print and write logs
+        logsManagement.write_logs(logs, initial_log, initial_time, "create_group")
+
+        # empty form
+        input_cn.delete(0, 'end')
+        input_description.delete(0, 'end')
 
     # main title
     title = tk.Label(root, text="Add a group", font=("Raleway", 30))
